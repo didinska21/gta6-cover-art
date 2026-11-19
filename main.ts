@@ -38,3 +38,6 @@ writeFileSync(
     app_path_max_bytes: 1000,
   }),
 );
+
+// VICE PANELS hands in its app, its screenshots and the dossier the judge reads.
+console.log(`vice-panels: app, screenshots and dossier.json written to ${out}`);
