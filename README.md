@@ -1,46 +1,55 @@
-# VICE PANELS
-
 [![Competition](https://make.fun/badge/gta6-cover-art-01.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![Rank](https://make.fun/badge/gta6-cover-art-01/didinska21/gta6-cover-art/rank.svg)](https://make.fun/bounty/gta6-cover-art-01)
 [![Reward](https://make.fun/badge/gta6-cover-art-01/didinska21/gta6-cover-art/reward.svg)](https://make.fun/bounty/gta6-cover-art-01)
 
-VICE PANELS turns your own photos into multi-panel poster cover art in a neon-sunset "Vice City" style: slanted poster panels, a magenta-orange-cyan colour grade, and bold display lettering, exported as a PNG in the sizes people actually post. It is a fully offline static web app — no build step, no network requests, your photos never leave your machine. Everything is original: the lettering uses the bundled Anton and Archivo Black typefaces (SIL Open Font License), and no game artwork, logo or font is used anywhere.
+# VICE PANELS
+
+Turn your own photos into multi-panel cover-art posters in a sun-soaked
+neon style: slanted panels, bold skewed lettering, sunset and neon color
+grades, and a caption band — rendered entirely in the browser.
+
+Open `app/index.html` in a desktop browser and it just works. There is no
+server, no build step, and no network call: every photo stays on your
+machine and every pixel is drawn locally on a canvas.
+
+## Quick start
+
+1. Open `app/index.html` and press **Contoh** — four built-in sample
+   photos load and the poster composes itself.
+2. Pick a style (**Sunset**, **Neon Night**, **Miami Heat**), type your
+   own title and caption, and nudge the effect sliders.
+3. Click any panel, drag its photo into place, scroll to zoom.
+4. Choose a size and press **Ekspor PNG**. Done — a finished cover.
+
+The four images in `screenshots/` are real exports produced by the app
+itself (three covers, one per style and size) plus one shot of the
+editor with the samples loaded.
 
 ## What it does
 
-- Drop in 1–6 photos (or press **Contoh** to load the four built-in sample photos, made with an image model for this app); the panel layout — 1, 2, 3 or 4 slanted panels — fits the photo count automatically, or pick a layout yourself.
-- Every panel is its own crop: drag a photo inside its panel, scroll or slide to zoom, hit **Auto focus** to centre on a face, and swap panels to reorder the story.
-- Edit the title and caption live on the canvas, and restyle the whole poster with three presets — **Sunset**, **Neon Night** and **Miami Heat** — plus colour grade, grain, halftone and vignette sliders.
-- Export in one click at **1080 × 1080**, **1080 × 1350** or **1920 × 1080**.
+- Drop in 1–6 photos (drag and drop, file picker, or the built-in
+  **Contoh** samples) and the poster layout follows: 1, 2, 3 or 4 slanted
+  panels, or pick a layout yourself.
+- Click a panel to select it, drag to reposition its photo, scroll to
+  zoom, swap photos between panels, or hit auto-focus to re-center.
+- Three house styles — **Sunset**, **Neon Night**, **Miami Heat** — each
+  with its own sky gradient, photo grade, title colors and caption band.
+- Editable title and caption, drawn live on the poster with heavy
+  poster lettering: gradient fill, dark outline, hard shadow.
+- Effect sliders for color grade, film grain, halftone dots, vignette
+  and text shadow.
+- One-click PNG export at 1080×1080, 1080×1350 or 1920×1080.
 
-## How to run
+## Layout of this repo
 
-Serve the app locally:
+- `app/` — the whole application: `index.html`, `style.css`, the
+  scripts in `app/src/` (panel geometry, the poster renderer, the
+  editor wiring, the bootstrap) and the built-in sample photos in
+  `app/samples/`.
+- `screenshots/` — the cover exports and editor shot shown to judges.
+- `main.ts` — the hand-in program: copies `app/` and `screenshots/`
+  to the output directory and writes `dossier.json` with the vendored
+  library in `vendor/`.
 
-```sh
-node serve.ts
-```
-
-Then open http://localhost:8080 in a desktop browser.
-
-To build the submission dossier instead (outside the grader's container, `MAKEFUN_OUTPUT_DIR` stands in for `/output`):
-
-```sh
-mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
-```
-
-## How the poster is drawn
-
-The renderer (`app/src/cover.js`) treats every cover as a small poster press. `computePanels` cuts the frame into slanted panels with a paper gutter between them; each photo is cover-fitted into its panel around its own focus point, so a face stays framed even in a wide, short panel. The preset then grades the whole sheet — a sunset, neon-night or pastel-heat wash laid over the panels — and deterministic grain and halftone textures (seeded, so every export of the same cover is byte-stable) plus a vignette finish the print look. The lettering is set last, on a deepened scrim at the foot: the caption in Archivo Black above a gradient-filled Anton title, auto-sized to the words you give it. What you see in the live preview is exactly what the PNG export draws, at all three sizes.
-
-## Layout of the repository
-
-- `app/` — the web app itself: `index.html`, `style.css`, `src/main.js` (editor wiring), `src/cover.js` (the poster renderer), `src/shots.js` (fixed scenes for screenshots), `fonts/` (bundled OFL typefaces with their licences) and `samples/` (the built-in sample photos).
-- `main.ts` — the hand-in program: copies `app/` and `screenshots/` to the output directory and writes `dossier.json` with the vendored library.
-- `vendor/makefun-app.ts` — the kit's dossier library, unchanged.
-- `screenshots/` — the cover and editor screenshots the entry is judged by.
-- `serve.ts` — a tiny local static server for trying the app.
-
-## Licence
-
-MIT — see `LICENSE`. The bundled fonts keep their own licences: `app/fonts/Anton-OFL.txt` and `app/fonts/ArchivoBlack-OFL.txt`.
+Everything here is original work — no third-party artwork, logos or
+fonts. Lettering is drawn on canvas with a heavy system font stack.

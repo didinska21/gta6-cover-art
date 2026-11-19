@@ -1,130 +1,121 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vice Panels — Cover Art Maker</title>
-  <link rel="stylesheet" href="./style.css">
+  <title>VICE PANELS</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="appShell">
-    <header class="topbar">
-      <h1>VICE PANELS</h1>
-      <p>Neon-sunset cover art maker</p>
-    </header>
+  <header class="app-header">
+    <div class="brand">
+      <h1>VICE <span>PANELS</span></h1>
+      <p>Ubah foto jadi cover art poster multi-panel bergaya Vice City — offline, tanpa unggah ke server.</p>
+    </div>
+  </header>
 
-    <aside id="panelLeft" class="sidebar" aria-label="Photo library">
-      <section>
-        <h2>Your photos</h2>
-        <div id="dropZone" class="dropZone" role="button" tabindex="0">
-          <span class="dropIcon" aria-hidden="true">+</span>
-          <strong>Drop photos here or click to add</strong>
-          <span class="hint" aria-hidden="true">1–6 photos</span>
-          <input id="fileInput" type="file" accept="image/*" multiple hidden>
+  <div class="layout">
+    <aside class="controls">
+      <section class="card">
+        <h2>Foto</h2>
+        <div class="button-row">
+          <button type="button" id="addPhotosBtn" class="btn primary">Tambah Foto</button>
+          <button type="button" id="sampleBtn" class="btn accent">Contoh</button>
         </div>
-        <div id="photoStrip" class="photoStrip"></div>
-      </section>
-
-      <section>
-        <h2>Sample photos</h2>
-        <div id="sampleStrip" class="sampleStrip">
-          <button class="sampleThumb" type="button" data-sample="neon-boulevard" aria-label="Load Neon Boulevard">
-            <img src="samples/neon-boulevard.jpg" alt="">
-          </button>
-          <button class="sampleThumb" type="button" data-sample="palm-beach" aria-label="Load Palm Beach">
-            <img src="samples/palm-beach.jpg" alt="">
-          </button>
-          <button class="sampleThumb" type="button" data-sample="neon-portrait" aria-label="Load Neon Portrait">
-            <img src="samples/neon-portrait.jpg" alt="">
-          </button>
-          <button class="sampleThumb" type="button" data-sample="marina-run" aria-label="Load Marina Run">
-            <img src="samples/marina-run.jpg" alt="">
-          </button>
+        <input id="fileInput" type="file" accept="image/*" multiple hidden>
+        <!-- Baki ini diisi setelah foto ditambahkan. -->
+        <div id="tray" class="tray">
+          <p class="empty">Belum ada foto — klik Contoh atau tambahkan foto.</p>
         </div>
-        <button id="sampleBtn" type="button">Contoh — load sample photos</button>
-      </section>
-    </aside>
-
-    <main id="stage" aria-label="Cover preview">
-      <div id="canvasWrap">
-        <canvas id="cover" width="1080" height="1080">
-          Cover preview requires canvas support.
-        </canvas>
-      </div>
-      <div id="sizeSeg" role="group" aria-label="Canvas size">
-        <button type="button" class="active" data-size="1080x1080">1080 × 1080</button>
-        <button type="button" data-size="1080x1350">1080 × 1350</button>
-        <button type="button" data-size="1920x1080">1920 × 1080</button>
-      </div>
-    </main>
-
-    <aside id="panelRight" class="sidebar" aria-label="Cover settings">
-      <section class="fieldStack">
-        <label for="titleInput">Title</label>
-        <input id="titleInput" type="text" maxlength="26" value="NEON HEAT">
-        <label for="captionInput">Caption</label>
-        <input id="captionInput" type="text" maxlength="44" value="One last ride along the bay">
-      </section>
-
-      <section>
-        <h2>Style presets</h2>
-        <div class="presetGrid" role="group" aria-label="Style presets">
-          <button class="presetBtn active" type="button" data-preset="sunset">Sunset</button>
-          <button class="presetBtn" type="button" data-preset="neon">Neon Night</button>
-          <button class="presetBtn" type="button" data-preset="miami">Miami Heat</button>
+        <p id="panelInfo" class="panel-info">Panel 1 dari 1</p>
+        <div class="button-row">
+          <button type="button" id="swapPrev" class="btn small">◀ Tukar</button>
+          <button type="button" id="swapNext" class="btn small">Tukar ▶</button>
+          <button type="button" id="focusBtn" class="btn small">Fokus Otomatis</button>
         </div>
       </section>
 
-      <section>
-        <h2>Panels layout</h2>
-        <div class="layoutGrid" role="group" aria-label="Panels layout">
-          <button class="layoutBtn active" type="button" data-layout="auto">Auto</button>
-          <button class="layoutBtn" type="button" data-layout="1">1</button>
-          <button class="layoutBtn" type="button" data-layout="2">2</button>
-          <button class="layoutBtn" type="button" data-layout="3">3</button>
-          <button class="layoutBtn" type="button" data-layout="4">4</button>
+      <section class="card">
+        <h2>Layout Panel</h2>
+        <div class="btn-group" id="layoutGroup">
+          <button type="button" data-layout="auto" class="active">Otomatis</button>
+          <button type="button" data-layout="1">1</button>
+          <button type="button" data-layout="2">2</button>
+          <button type="button" data-layout="3">3</button>
+          <button type="button" data-layout="4">4</button>
         </div>
       </section>
 
-      <section>
-        <h2>Effects</h2>
-        <div class="rangeGrid">
-          <label for="fxGrade">Color grade</label>
-          <input id="fxGrade" type="range" min="0" max="100" value="70">
-          <label for="fxGrain">Grain</label>
+      <section class="card">
+        <h2>Gaya</h2>
+        <div class="btn-group" id="presetGroup">
+          <button type="button" data-preset="sunset" class="active"><span class="swatch sw-sunset" aria-hidden="true"></span>Sunset</button>
+          <button type="button" data-preset="neon"><span class="swatch sw-neon" aria-hidden="true"></span>Neon Night</button>
+          <button type="button" data-preset="miami"><span class="swatch sw-miami" aria-hidden="true"></span>Miami Heat</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Teks</h2>
+        <label class="text-label" for="titleInput">Judul</label>
+        <input id="titleInput" type="text" value="VICE PANELS" maxlength="40">
+        <label class="text-label" for="captionInput">Keterangan</label>
+        <input id="captionInput" type="text" value="Satu kota, sejuta cerita" maxlength="60">
+      </section>
+
+      <section class="card">
+        <h2>Efek</h2>
+        <div class="slider-row">
+          <label for="fxGrade">Grade Warna</label>
+          <input id="fxGrade" type="range" min="0" max="100" value="55">
+        </div>
+        <div class="slider-row">
+          <label for="fxGrain">Grain Film</label>
           <input id="fxGrain" type="range" min="0" max="100" value="35">
+        </div>
+        <div class="slider-row">
           <label for="fxHalftone">Halftone</label>
           <input id="fxHalftone" type="range" min="0" max="100" value="25">
+        </div>
+        <div class="slider-row">
           <label for="fxVignette">Vignette</label>
           <input id="fxVignette" type="range" min="0" max="100" value="55">
         </div>
-      </section>
-
-      <section class="selectedPanel" aria-label="Selected panel">
-        <p id="panelLabel">Panel 1 selected</p>
-        <div class="rangeGrid">
-          <label for="panelZoom">Zoom</label>
-          <input id="panelZoom" type="range" min="100" max="320" value="100">
-        </div>
-        <div class="actionGrid">
-          <button id="focusBtn" type="button">Auto focus</button>
-          <button id="swapLeftBtn" type="button">Move left</button>
-          <button id="swapRightBtn" type="button">Move right</button>
-          <button id="resetPanelBtn" type="button">Reset panel</button>
+        <div class="slider-row">
+          <label for="fxShadow">Bayangan Teks</label>
+          <input id="fxShadow" type="range" min="0" max="100" value="70">
         </div>
       </section>
 
-      <section>
-        <h2>Export</h2>
-        <div class="exportStack">
-          <button class="exportBtn" type="button" data-size="1080x1080">Export PNG 1080 x 1080</button>
-          <button class="exportBtn" type="button" data-size="1080x1350">Export PNG 1080 x 1350</button>
-          <button class="exportBtn" type="button" data-size="1920x1080">Export PNG 1920 x 1080</button>
+      <section class="card">
+        <h2>Ekspor PNG</h2>
+        <div class="btn-group" id="sizeGroup">
+          <button type="button" data-size="1080x1080">1080 × 1080</button>
+          <button type="button" data-size="1080x1350">1080 × 1350</button>
+          <button type="button" data-size="1920x1080" class="active">1920 × 1080</button>
         </div>
-        <p id="statusLine" role="status"></p>
+        <button type="button" id="exportBtn" class="btn primary big">Ekspor PNG</button>
       </section>
     </aside>
+
+    <main class="stage-wrap">
+      <div class="stage">
+        <canvas id="stageCanvas" width="920" height="518" aria-label="Pratinjau poster"></canvas>
+      </div>
+      <p id="hintText" class="hint">Seret foto ke jendela, atau klik Contoh untuk mulai. Klik panel untuk memilih, seret untuk menggeser foto, roda mouse untuk zoom.</p>
+    </main>
   </div>
-  <script type="module" src="./src/main.js"></script>
+
+  <div id="dropOverlay" class="drop-overlay">Lepaskan foto di sini</div>
+
+  <footer class="app-footer">
+    <small>VICE PANELS — semua proses di browser kamu; foto tidak pernah meninggalkan perangkat.</small>
+  </footer>
+
+  <!-- Muat skrip lokal sesuai urutan dependensinya. -->
+  <script src="src/panels.js"></script>
+  <script src="src/render.js"></script>
+  <script src="src/editor.js"></script>
+  <script src="src/main.js"></script>
 </body>
 </html>

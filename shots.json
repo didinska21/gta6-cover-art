@@ -1,6 +1,0 @@
-[
-  { "name": "1-cover.jpg", "kind": "export", "w": 1920, "h": 1080, "query": "?shot=1&n=4&preset=sunset&size=1920x1080&layout=4&title=NEON%20HEAT&caption=One%20last%20ride%20along%20the%20bay" },
-  { "name": "2-editor.jpg", "kind": "page", "query": "?shot=1&n=4&preset=sunset&size=1920x1080" },
-  { "name": "3-cover.jpg", "kind": "export", "w": 1080, "h": 1350, "query": "?shot=1&n=3&preset=neon&size=1080x1350&layout=3&title=MIDNIGHT%20RUN&caption=Every%20light%20on%20the%20strip%20is%20a%20promise" },
-  { "name": "4-cover.jpg", "kind": "export", "w": 1080, "h": 1080, "query": "?shot=1&n=2&preset=miami&size=1080x1080&layout=2&title=PALM%20CITY&caption=Trouble%20wears%20a%20pastel%20suit" }
-]
