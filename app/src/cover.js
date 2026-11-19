@@ -236,18 +236,20 @@ function drawLettering(ctx, w, h, preset, title, caption) {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'alphabetic';
   ctx.shadowColor = preset.shadow;
+  setLetterSpacing(ctx, '0px');
+  const size = fitText(ctx, titleText, 'Anton', h * 0.12, h * 0.04, w * 0.92);
+  const baseline = h * 0.955;
   if (captionText) {
     setLetterSpacing(ctx, '0.18em');
-    const size = fitText(ctx, captionText, 'Archivo Black', h * 0.034, Math.min(1, h * 0.034), w * 0.86);
+    const captionSize = fitText(ctx, captionText, 'Archivo Black', h * 0.034, Math.min(1, h * 0.034), w * 0.86);
     ctx.fillStyle = preset.caption;
-    ctx.shadowBlur = size * 0.35;
+    ctx.shadowBlur = captionSize * 0.35;
     ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = size * 0.12;
-    ctx.fillText(captionText, w / 2, h * 0.845);
+    ctx.shadowOffsetY = captionSize * 0.12;
+    ctx.fillText(captionText, w / 2, baseline - size * 1.06 - captionSize * 0.55);
   }
   setLetterSpacing(ctx, '0px');
-  const size = fitText(ctx, titleText, 'Anton', h * 0.135, h * 0.04, w * 0.92);
-  const baseline = h * 0.955;
+  ctx.font = `${size}px "Anton", sans-serif`;
   const gradient = ctx.createLinearGradient(0, baseline - size, 0, baseline);
   gradient.addColorStop(0, preset.titleA);
   gradient.addColorStop(1, preset.titleB);
@@ -337,11 +339,11 @@ export function drawCover(ctx, S) {
       ctx.fillRect(0, 0, w, h);
     }
 
-    const scrim = ctx.createLinearGradient(0, h * 0.60, 0, h);
+    const scrim = ctx.createLinearGradient(0, h * 0.50, 0, h);
     scrim.addColorStop(0, 'rgba(10,2,16,0)');
-    scrim.addColorStop(1, 'rgba(10,2,16,0.72)');
+    scrim.addColorStop(1, 'rgba(10,2,16,0.80)');
     ctx.fillStyle = scrim;
-    ctx.fillRect(0, h * 0.60, w, h * 0.40);
+    ctx.fillRect(0, h * 0.50, w, h * 0.50);
     drawLettering(ctx, w, h, preset, title, caption);
   } finally {
     ctx.restore();
