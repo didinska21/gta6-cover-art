@@ -29,6 +29,10 @@ To build the submission dossier instead (outside the grader's container, `MAKEFU
 mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 ```
 
+## How the poster is drawn
+
+The renderer (`app/src/cover.js`) treats every cover as a small poster press. `computePanels` cuts the frame into slanted panels with a paper gutter between them; each photo is cover-fitted into its panel around its own focus point, so a face stays framed even in a wide, short panel. The preset then grades the whole sheet — a sunset, neon-night or pastel-heat wash laid over the panels — and deterministic grain and halftone textures (seeded, so every export of the same cover is byte-stable) plus a vignette finish the print look. The lettering is set last, on a deepened scrim at the foot: the caption in Archivo Black above a gradient-filled Anton title, auto-sized to the words you give it. What you see in the live preview is exactly what the PNG export draws, at all three sizes.
+
 ## Layout of the repository
 
 - `app/` — the web app itself: `index.html`, `style.css`, `src/main.js` (editor wiring), `src/cover.js` (the poster renderer), `src/shots.js` (fixed scenes for screenshots), `fonts/` (bundled OFL typefaces with their licences) and `samples/` (the built-in sample photos).
