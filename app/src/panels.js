@@ -1,63 +1,60 @@
-window.VP = window.VP || {};
+// Geometry helpers use poster coordinates and never touch the DOM.
+export function polygonCentroid(poly) {
+  const sum = poly.reduce(([x, y], point) => [x + point[0], y + point[1]], [0, 0]);
+  return [sum[0] / poly.length, sum[1] / poly.length];
+}
 
-(function (VP) {
-  'use strict';
+export function panelPolygons(count, w, h) {
+  if (count === 1) return [[[0, 0], [w, 0], [w, h], [0, h]]];
 
-  VP.panelPolygons = function (count, W, H) {
-    if (count === 1) {
-      return [[[0, 0], [W, 0], [W, H], [0, H]]];
-    }
-
-    if (count === 2 || count === 3) {
-      const lean = count === 2 ? 0.05 : 0.035;
-      const top = [0];
-      const bottom = [0];
-      for (let i = 1; i < count; i++) {
-        top.push((i / count + lean) * W);
-        bottom.push((i / count - lean) * W);
-      }
-      top.push(W);
-      bottom.push(W);
-      return top.slice(0, count).map((x, i) => [
-        [x, 0], [top[i + 1], 0], [bottom[i + 1], H], [bottom[i], H]
-      ]);
-    }
-
-    if (count === 4) {
-      // In normalized coordinates the dividers are x = .54 - .08y
-      // and y = .45 + .08x. Solve them before scaling to poster size.
-      const x = (0.54 - 0.08 * 0.45) / (1 + 0.08 * 0.08);
-      const center = [x * W, (0.45 + 0.08 * x) * H];
-      const top = [0.54 * W, 0];
-      const bottom = [0.46 * W, H];
-      const left = [0, 0.45 * H];
-      const right = [W, 0.53 * H];
-      return [
-        [[0, 0], top, center, left],
-        [top, [W, 0], right, center],
-        [left, center, bottom, [0, H]],
-        [center, right, [W, H], bottom]
-      ];
-    }
-
-    return [];
+  const seams = {
+    2: [[0.60], [0.40]],
+    3: [[0.38, 0.70], [0.28, 0.60]],
+    4: [[0.28, 0.52, 0.76], [0.20, 0.44, 0.68]],
   };
+  if (!Number.isInteger(count) || !seams[count]) {
+    throw new RangeError('Panel count must be an integer from 1 to 4.');
+  }
 
-  VP.panelBounds = function (poly) {
-    const xs = poly.map(([x]) => x);
-    const ys = poly.map(([, y]) => y);
-    const x = Math.min(...xs);
-    const y = Math.min(...ys);
-    return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
-  };
+  const top = [0, ...seams[count][0], 1];
+  const bottom = [0, ...seams[count][1], 1];
+  const gap = Math.max(3, w * 0.004);
 
-  VP.coverRect = function (imgW, imgH, boxW, boxH, zoom, ox, oy) {
-    const scale = Math.max(boxW / imgW, boxH / imgH) * zoom;
-    const dw = imgW * scale;
-    const dh = imgH * scale;
-    // Positive offsets move the image right or down within its available slack.
-    const dx = (boxW - dw) * (1 - ox) / 2;
-    const dy = (boxH - dh) * (1 - oy) / 2;
-    return { dx, dy, dw, dh };
-  };
-})(window.VP);
+  return Array.from({ length: count }, (_, i) => {
+    const poly = [
+      [top[i] * w, 0],
+      [top[i + 1] * w, 0],
+      [bottom[i + 1] * w, h],
+      [bottom[i] * w, h],
+    ];
+    const [cx, cy] = polygonCentroid(poly);
+    // Pull each corner toward this panel's centroid to open the gutters.
+    return poly.map(([x, y]) => {
+      const dx = cx - x;
+      const dy = cy - y;
+      const distance = Math.hypot(dx, dy);
+      if (distance === 0) return [x, y];
+      return [x + dx * gap / distance, y + dy * gap / distance];
+    });
+  });
+}
+
+export function pointInPolygon(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [xi, yi] = poly[i];
+    const [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) {
+      inside = !inside;
+    }
+  }
+  return inside;
+}
+
+export function polygonBounds(poly) {
+  const xs = poly.map(([x]) => x);
+  const ys = poly.map(([, y]) => y);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return { x, y, w: Math.max(...xs) - x, h: Math.max(...ys) - y };
+}
